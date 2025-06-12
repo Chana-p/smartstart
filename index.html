@@ -768,6 +768,56 @@
     </footer>
 
     <script>
+        // פונקציה לעירור אתרים רדומים ב-Render
+        function wakeUpSites() {
+            const sites = [
+                'https://myprojectfrontend1.onrender.com',
+                'https://mycalender.onrender.com'
+            ];
+            
+            console.log('🔄 מתחיל לעורר אתרים רדומים...');
+            
+            sites.forEach((site, index) => {
+                // שיטה 1: Fetch request
+                fetch(site, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                })
+                .then(() => {
+                    console.log(`✅ אתר ${index + 1} התעורר: ${site}`);
+                })
+                .catch((error) => {
+                    console.log(`⚠️ ניסיון עירור אתר ${index + 1}: ${site}`);
+                });
+                
+                // שיטה 2: יצירת iframe נסתר
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.style.width = '1px';
+                iframe.style.height = '1px';
+                iframe.src = site;
+                document.body.appendChild(iframe);
+                
+                // הסרת ה-iframe אחרי 10 שניות
+                setTimeout(() => {
+                    if (iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                }, 10000);
+            });
+            
+            console.log('🚀 בקשות עירור נשלחו לכל האתרים');
+        }
+
+        // הפעלת הפונקציה מיד בטעינת הדף
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', wakeUpSites);
+        } else {
+            wakeUpSites();
+        }
+
+       
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
